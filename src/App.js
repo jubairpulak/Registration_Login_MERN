@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { StyledContainer } from "./components/Styles";
+
+//loder css
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+
+//auth & redux
+import { connect } from "react-redux";
+
+import AuthRoute from "./components/AuthRoute";
+import BasicRoute from "./components/BasicRoute";
+function App({ checked }) {
+	return (
+		<Router>
+			{checked && (
+				<StyledContainer>
+					<Switch>
+						<BasicRoute exact path="/" component={Home} />
+						<BasicRoute exact path="/signup">
+							<Signup />
+						</BasicRoute>
+						<BasicRoute exact path="/login">
+							<Login />
+						</BasicRoute>
+						<AuthRoute exact path="/dashboard">
+							<Dashboard />
+						</AuthRoute>
+					</Switch>
+				</StyledContainer>
+			)}
+		</Router>
+	);
 }
 
-export default App;
+const mapStateToProps = ({ session }) => ({
+	checked: session.checked,
+});
+
+export default connect(mapStateToProps)(App);
